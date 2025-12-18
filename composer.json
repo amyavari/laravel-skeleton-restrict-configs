@@ -43,6 +43,20 @@
         }
     },
     "scripts": {
+        "refactor": "rector",
+        "lint": "pint",
+        "test:refactor": "rector --dry-run",
+        "test:lint": "pint --test",
+        "test:types": "phpstan analyse --ansi --memory-limit=1G",
+        "test:unit": "pest --colors=always --coverage --parallel",
+        "test:type-coverage": "pest --colors=always --type-coverage --parallel",
+        "test": [
+            "@test:refactor",
+            "@test:lint",
+            "@test:types",
+            "@test:type-coverage",
+            "@test:unit"
+        ],
         "setup": [
             "composer install",
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
@@ -54,10 +68,6 @@
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
-        ],
-        "test": [
-            "@php artisan config:clear --ansi",
-            "@php artisan test"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
